@@ -36,3 +36,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/java/ru/comand/repository/Files/customer.txt
+/src/main/java/ru/comand/repository/Files/customer.txt_id
