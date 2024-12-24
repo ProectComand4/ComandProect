@@ -1,5 +1,6 @@
 package ru.comand.controller;
 
+import ru.comand.Enums.CustomerType;
 import ru.comand.Exceptions.CustomerNotFoundException;
 import ru.comand.service.CustomerService;
 
@@ -10,12 +11,15 @@ public class CustomerController {
     Scanner scanner = new Scanner(System.in);
     private final CustomerService customerService;
     String customerName;
-    String customerType;
+    CustomerType customerType;
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
+    /**
+     * Управление покупателями
+     */
     public void start() {
         while (true) {
             System.out.println("\n1. Добавить покупателя");
@@ -33,7 +37,7 @@ public class CustomerController {
                     case 1 -> addCustomer();
                     case 2 -> getAllCustomers();
                     case 3 -> {
-                        System.out.print("\nВведите ID покупателя: ");
+                        System.out.print("Введите ID покупателя: ");
                         int id = scanner.nextInt();
                         getCustomerById(id);
                     }
@@ -43,47 +47,56 @@ public class CustomerController {
                 System.out.println(e.getMessage());
             } catch (InputMismatchException e) {
                 System.out.println("Ошибка. Введите число");
-                scanner.nextLine();
+                scanner.next();
             } catch (Exception e) {
                 System.out.println("Ошибка " + e.getMessage());
             }
         }
     }
 
+    /**
+     * Добавляет нового покупателя
+     */
     private void addCustomer() {
         while ((customerName = scanner.nextLine()).isEmpty()) {
-            System.out.print("\nВведите имя покупателя: ");
+            System.out.print("Введите имя покупателя: ");
 
         }
         while (customerType == null) {
             System.out.println("Выберите статус покупателя: " +
-                    "\n1. NEW" +
-                    "\n2. REGULAR" +
-                    "\n3. VIP");
+                    "\n1. Новый покупатель" +
+                    "\n2. Постоянный покупатель" +
+                    "\n3. VIP покупатель");
             try {
                 int choice = scanner.nextInt();
-                // scanner.nextLine();
                 switch (choice) {
-                    case 1 -> customerType = "NEW";
-                    case 2 -> customerType = "REGULAR";
-                    case 3 -> customerType = "VIP";
+                    case 1 -> customerType = CustomerType.NEW;
+                    case 2 -> customerType = CustomerType.REGULAR;
+                    case 3 -> customerType = CustomerType.VIP;
                     default -> System.out.println("Введите число из предложенных");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Ошибка. Введите число");
-                scanner.nextLine();
+                scanner.next();
             }
         }
         String view = customerService.addCustomer(customerName, customerType).toString();
-        System.out.println("Добавлен покупатель - " + view);
+        System.out.print("Добавлен покупатель - " + view);
         customerType = null;
     }
 
+    /**
+     * Выводит список всех покупателей
+     */
     private void getAllCustomers() {
         String view = customerService.getAll().toString();
         System.out.println(view);
     }
 
+    /**
+     * Выводит покупателя с указанным ID
+     * @param id ID покупателя
+     */
     private void getCustomerById(int id) {
         try {
             String view = customerService.getByID(id).toString();
