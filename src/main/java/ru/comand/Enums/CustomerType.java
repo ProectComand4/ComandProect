@@ -16,6 +16,23 @@ public enum CustomerType {
     }
 
     /**
+     * Определяет тип покупателя
+     * @param choice число, соответствующее типу покупателя
+     * @return тип покупателя
+     */
+    public static CustomerType selectCustomerType(int choice) {
+        if (choice < 1 || choice > 3) {
+            System.out.println("Введите число из предложенных");
+
+        }
+        return switch (choice) {
+            case 1 -> NEW;
+            case 2 -> REGULAR;
+            case 3 -> VIP;
+            default -> null;
+        };
+    }
+    /**
      * Определяет тип покупателя по строке
      * @param rus String тип покупателя
      * @return Enum тип покупателя
