@@ -7,9 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-
 
 public class CustomerRepository {
     private final Path filePath;
@@ -25,22 +22,15 @@ public class CustomerRepository {
                 Files.createFile(filePath);
             }
             if (Files.exists(filePathID)) {
-                if (Objects.equals(Files.readString(filePathID), "")) {
-                    Customer customer = Files.readAllLines(filePath).stream()
-                            .map(Customer::new)
-                            .max((c1, c2) -> Integer.compare(c1.getId(), c2.getId()))
-                            .get();
-                    Files.write(filePathID, customer.getId().toString().getBytes());
-                } // работает, но, если файл с покупателями пустой, программа начинается с описания исключения NoSuchElementException
                 id = Integer.parseInt(Files.readString(filePathID));
             } else {
                 Files.createFile(filePathID);
                 Files.write(filePathID, id.toString().getBytes());
             }
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла - " + e.getMessage());
-        } catch (NoSuchElementException e) {
-            System.out.println("Файл с покупателями пустой");
+            System.out.println("Файл не найден - " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Файл с ID пустой");
         }
     }
 
@@ -54,12 +44,12 @@ public class CustomerRepository {
         try {
             Files.write(filePath, (customer.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла - " + e.getMessage());
+            System.out.println("Файл не найден - " + e.getMessage());
         }
         try {
             Files.write(filePathID, id.toString().getBytes());
         } catch (IOException e) {
-            System.out.println("Ошибка чтения файла - " + e.getMessage());
+            System.out.println("Файл не найден - " + e.getMessage());
         }
         return customer;
     }
@@ -74,7 +64,7 @@ public class CustomerRepository {
                     .map(l -> new Customer(l))
                     .toList();
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка чтения файла - " + e.getMessage());
+            throw new RuntimeException("Не удалось найти файл - " + e.getMessage());
         }
     }
 

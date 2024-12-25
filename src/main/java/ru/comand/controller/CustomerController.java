@@ -58,8 +58,9 @@ public class CustomerController {
      * Добавляет нового покупателя
      */
     private void addCustomer() {
-        while ((customerName = scanner.nextLine()).trim().isEmpty()) {
+        while ((customerName = scanner.nextLine()).isEmpty()) {
             System.out.print("Введите имя покупателя: ");
+
         }
         while (customerType == null) {
             System.out.println("Выберите статус покупателя: " +
@@ -68,7 +69,12 @@ public class CustomerController {
                     "\n3. VIP покупатель");
             try {
                 int choice = scanner.nextInt();
-                customerType = CustomerType.selectCustomerType(choice);
+                switch (choice) {
+                    case 1 -> customerType = CustomerType.NEW;
+                    case 2 -> customerType = CustomerType.REGULAR;
+                    case 3 -> customerType = CustomerType.VIP;
+                    default -> System.out.println("Введите число из предложенных");
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Ошибка. Введите число");
                 scanner.next();
