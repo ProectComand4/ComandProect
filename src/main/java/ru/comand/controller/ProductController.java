@@ -1,8 +1,8 @@
 package ru.comand.controller;
 
 import ru.comand.Exceptions.ProductNotFoundException;
+import ru.comand.model.enums.CategoryProduct;
 import ru.comand.service.ProductService;
-
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -11,15 +11,15 @@ public class ProductController {
     private final ProductService productService;
     String productName;
     Integer productPrice;
-    String productCategory;
+    CategoryProduct productCategory;
 
     public ProductController(ProductService service) {
         this.productService = service;
     }
-
+    /**
+     * Управление продуктами
+     */
     public void start() {
-
-
         while (true) {
             System.out.print("\n 1.Создать товар");
             System.out.print("\n 2.Список всех товаров");
@@ -60,7 +60,9 @@ public class ProductController {
         }
 
     }
-
+    /**
+     * Добавляет новый продукт
+     */
 
     public void addProduct() {
         while (productName == null) {
@@ -93,10 +95,9 @@ public class ProductController {
                 int choice = scan.nextInt();
                 try {
                     switch (choice) {
-                        case 1 -> productCategory = "FOOD";
-                        case 2 -> productCategory = "ELECTRONICSs";
-                        case 3 -> productCategory = "CLOTHING";
-                        case 4 -> productCategory = "FURNITURE";
+                        case 1 -> productCategory = CategoryProduct.FOOD;
+                        case 2 -> productCategory = CategoryProduct.ELECTRONICS;
+                        case 3 -> productCategory = CategoryProduct.CLOTHING;
                         default -> System.out.println("Ошибка повторите");
                     }
                 } catch (Exception e) {
@@ -106,7 +107,7 @@ public class ProductController {
                 System.out.println("Введите цифру из представленных");
             }
         }
-        String view = productService.addProduct(productName, productPrice, productCategory).toString();
+        String view = productService.addProduct(productName, productPrice, productCategory);
         System.out.println(view);
         productName = null;
         productPrice = null;
@@ -114,15 +115,20 @@ public class ProductController {
 
 
     }
-
+    /**
+     * Выводит список всех продуктов
+     */
     private void getAllProducts() {
-        String view = productService.getAllProduct().toString();
+        String view = productService.getAll().toString();
         System.out.println(view);
     }
-
+    /**
+     * Выводит продукт с указанным ID
+     * @param id ID продукта
+     */
     private void getIndexProduct(int id) {
         try {
-            String view = productService.getIndexProduct(id).toString();
+            String view = productService.getById(id).toString();
             System.out.println(view);
         } catch (NullPointerException e) {
             throw new ProductNotFoundException("Продукта с данным ID не нашлось");

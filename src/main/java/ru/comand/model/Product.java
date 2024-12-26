@@ -1,18 +1,31 @@
 package ru.comand.model;
 
+import ru.comand.model.enums.CategoryProduct;
+
 import java.util.Objects;
 
 public class Product {
+    private CategoryProduct productCategory;
     private Integer id;
     private String productName;
     private Integer productPrice;
-    private String productCategory;
 
-    public Product(Integer id, String productName, Integer productPrice, String productCategory) {
+    public Product(Integer id, String productName,
+                   Integer productPrice,
+                   CategoryProduct categoryProduct) {
         this.id = id;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.productCategory = productCategory;
+        this.productCategory = categoryProduct;
+    }
+
+    public Product(String productFromFile) {
+        String[] parts = productFromFile.split(",");
+        this.id = Integer.parseInt(parts[0]);
+        this.productName = parts[1];
+        this.productPrice = Integer.parseInt(parts[2]);
+        this.productCategory = CategoryProduct.toCategoryRus(parts[3]);
+
     }
 
     public Integer getId() {
@@ -39,12 +52,12 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public String getProductCategory() {
+    public CategoryProduct getProductCategory() {
         return productCategory;
     }
 
     public void setProductCategory(String productCategory) {
-        this.productCategory = productCategory;
+        this.productCategory = CategoryProduct.valueOf(productCategory);
     }
 
     @Override
@@ -52,7 +65,9 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(productName, product.productName) && Objects.equals(productPrice, product.productPrice) && Objects.equals(productCategory, product.productCategory);
+        return Objects.equals(id, product.id) && Objects.equals(productName, product.productName)
+                && Objects.equals(productPrice, product.productPrice)
+                && Objects.equals(productCategory, product.productCategory);
     }
 
     @Override
@@ -63,8 +78,10 @@ public class Product {
     @Override
     public String toString() {
         return
-                "id=" + id + " " + productName +
-                        ", за " + productPrice + " рублей" +
-                        " из категории " + productCategory;
+                "\n" +  id + "," + productName + "," + productPrice + "," + productCategory.getRus();
+    }
+
+    public String toStringForFiles() {
+        return "\n" + id + "," + productName + "," + productPrice + "," + productCategory;
     }
 }
