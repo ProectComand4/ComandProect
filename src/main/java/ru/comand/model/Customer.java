@@ -1,16 +1,25 @@
 package ru.comand.model;
 
+import ru.comand.Enums.CustomerType;
+
 import java.util.Objects;
 
 public class Customer {
     private Integer id;
     private String name;
-    private String type;
+    private CustomerType type;
 
-    public Customer(Integer id, String name, String type) {
-        this.id = id;
+    public Customer(String name, CustomerType type) {
+        this.id = null;
         this.name = name;
         this.type = type;
+    }
+
+    public Customer(String customerFromFile) {
+        String[] parts = customerFromFile.split(";");
+        this.id = Integer.parseInt(parts[0]);
+        this.name = parts[1];
+        this.type = CustomerType.toCustomerType(parts[2]);
     }
 
     public Integer getId() {
@@ -29,11 +38,11 @@ public class Customer {
         this.name = name;
     }
 
-    public String getType() {
+    public CustomerType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CustomerType type) {
         this.type = type;
     }
 
@@ -42,7 +51,7 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(type, customer.type);
+        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && type == customer.type;
     }
 
     @Override
@@ -52,6 +61,14 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "id - " + id + ", имя покупателя - " + name + ", тип покупателя - " + type;
+        return "\nid - " + id + ", имя покупателя - " + name + ", тип покупателя - " + type.getRus();
+    }
+
+    /**
+     * Записывает информацию о покупателе для сохранения в файл
+     * @return строку с информацией о покупателе
+     */
+    public String toStringForFiles() {
+        return id + ";" + name + ";" + type;
     }
 }
