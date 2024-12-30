@@ -1,32 +1,47 @@
 package ru.comand.service;
-
 import ru.comand.model.Product;
+import ru.comand.model.enums.CategoryProduct;
 import ru.comand.repository.ProductRepository;
 
 import java.util.List;
 
 public class ProductService {
 
-
     private final ProductRepository productRepository;
 
 
     public ProductService(ProductRepository bookRepository) {
-        this.productRepository = bookRepository; // внедрение зависимостей // dependency injection
+        this.productRepository = bookRepository;
     }
 
-    public Product addProduct(String name, Integer price, String category) {
+    /**
+     * Добавляет информацию о продукте в репозиторий
+     * @param name имя продукта
+     * @param price цену продукта
+     * @param category тип продукта
+     * @return сохранённого продукта
+     */
+    public String addProduct(String name, Integer price, CategoryProduct category) {
         Product newProduct = new Product(null, name, price, category);
-
-        return productRepository.save(newProduct);
+        productRepository.save(newProduct);
+        return newProduct.toString();
     }
 
-    public List<Product> getAllProduct() {
+    /**
+     * Получает список всех продуктов из репозитория
+     * @return список всех продуктов
+     */
+    public List<Product> getAll() {
         return productRepository.findAll();
     }
 
-    public Product getIndexProduct(int index) {
-        return productRepository.findById(index);
+    /**
+     * Получает продукт с указанным ID из репозитория
+     * @param id ID продукта
+     * @return продукт с указанным ID
+     */
+    public Product getById(int id) {
+        return productRepository.findById(id);
 
 
     }
