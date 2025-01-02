@@ -61,8 +61,9 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "\nid - " + id + ", имя покупателя - " + name + ", тип покупателя - " + type.getRus();
+        return "\nid - " + id + "," + name + "," + type.getRus();
     }
+
 
     /**
      * Записывает информацию о покупателе для сохранения в файл

@@ -1,4 +1,4 @@
-package ru.comand.model.enums;
+package ru.comand.Enums;
 
 public enum CategoryProduct {
     FOOD("ПИЩА"),

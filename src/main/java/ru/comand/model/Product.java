@@ -1,6 +1,6 @@
 package ru.comand.model;
 
-import ru.comand.model.enums.CategoryProduct;
+import ru.comand.Enums.CategoryProduct;
 
 import java.util.Objects;
 
@@ -82,6 +82,6 @@ public class Product {
     }
 
     public String toStringForFiles() {
-        return "\n" + id + "," + productName + "," + productPrice + "," + productCategory;
+        return  id + "," + productName + "," + productPrice + "," + productCategory;
     }
 }

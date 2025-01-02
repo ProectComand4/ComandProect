@@ -1,6 +1,6 @@
 package ru.comand.service;
 import ru.comand.model.Product;
-import ru.comand.model.enums.CategoryProduct;
+import ru.comand.Enums.CategoryProduct;
 import ru.comand.repository.ProductRepository;
 
 import java.util.List;

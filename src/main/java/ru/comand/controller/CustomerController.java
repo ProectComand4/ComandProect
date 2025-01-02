@@ -2,6 +2,7 @@ package ru.comand.controller;
 
 import ru.comand.Enums.CustomerType;
 import ru.comand.Exceptions.CustomerNotFoundException;
+import ru.comand.model.Customer;
 import ru.comand.service.CustomerService;
 
 import java.util.InputMismatchException;
@@ -21,6 +22,7 @@ public class CustomerController {
      * Управление покупателями
      */
     public void start() {
+
         while (true) {
             System.out.println("\n1. Добавить покупателя");
             System.out.println("2. Показать всех покупателей");
@@ -39,7 +41,7 @@ public class CustomerController {
                     case 3 -> {
                         System.out.print("Введите ID покупателя: ");
                         int id = scanner.nextInt();
-                        getCustomerById(id);
+                        System.out.println(getCustomerById(id));
                     }
                     default -> System.out.println("Введите число из предложенных");
                 }
@@ -82,7 +84,7 @@ public class CustomerController {
     /**
      * Выводит список всех покупателей
      */
-    private void getAllCustomers() {
+    public void getAllCustomers() {
         String view = customerService.getAll().toString();
         System.out.println(view);
     }
@@ -91,10 +93,10 @@ public class CustomerController {
      * Выводит покупателя с указанным ID
      * @param id ID покупателя
      */
-    private void getCustomerById(int id) {
+    public Customer getCustomerById(int id) {
         try {
-            String view = customerService.getByID(id).toString();
-            System.out.println(view);
+            return customerService.getByID(id);
+
         } catch (NullPointerException e) {
             throw new CustomerNotFoundException("Покупателя с таким ID нет");
         }
