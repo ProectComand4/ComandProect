@@ -12,14 +12,16 @@ import java.util.Objects;
 
 
 public class CustomerRepository {
-    private final Path filePath;
-    private final Path filePathID;
-    private Integer id;
+    private final Path filePath =
+            Path.of("src/main/java/ru/comand/repository/files/customer.txt");
+    ;
+    private final Path filePathID =
+            Path.of("src/main/java/ru/comand/repository/files/idCustomer.txt");
+    ;
+    private Integer id = 0;
 
-    public CustomerRepository(String file) {
-        id = 0;
-        this.filePath = Path.of(file);
-        this.filePathID = Path.of(file + "_id");
+    public CustomerRepository() {
+
         try {
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);

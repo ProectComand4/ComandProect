@@ -1,20 +1,31 @@
 package ru.comand.model;
 
 
+import ru.comand.Enums.CustomerType;
+import ru.comand.Enums.OrderStatus;
+
 import java.util.List;
 import java.util.Objects;
 
 public class Order {
     private Integer id;
     private Customer customer;
-    private List<Product> products;
-    private String status;
+    private Product product;
+    private OrderStatus status;
 
-    public Order(Integer id, Customer customer, List<Product> products, String status) {
+    public Order(Integer id, Customer customer, Product product, OrderStatus status) {
         this.id = id;
         this.customer = customer;
-        this.products = products;
+        this.product = product;
         this.status = status;
+    }
+
+    public Order(String customerFromFile) {
+        String[] parts = customerFromFile.split("-");
+        this.id = Integer.parseInt(parts[0]);
+        this.customer = new Customer(parts[1]);
+        this.product = new Product(parts[2]);
+        this.status = OrderStatus.toOrderStatus(parts[3]);
     }
 
     public Integer getId() {
@@ -33,19 +44,19 @@ public class Order {
         this.customer = customer;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -54,16 +65,22 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(customer, order.customer) && Objects.equals(products, order.products) && Objects.equals(status, order.status);
+        return Objects.equals(id, order.id) && Objects.equals(customer, order.customer) && Objects.equals(product, order.product) && Objects.equals(status, order.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, products, status);
+        return Objects.hash(id, customer, product, status);
     }
 
     @Override
     public String toString() {
-        return "id = " + id + ", покупатель - " + customer + ", состав заказа - " + products + ", статус заказа - " + status;
+        return
+                "\n" + id + "-" + customer + "-" + product + "-" + status.getRus();
     }
+
+    public String toStringForFiles() {
+        return id + "-" + customer + "-" + product + "-" + status;
+    }
+
 }
