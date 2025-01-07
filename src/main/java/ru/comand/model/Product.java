@@ -78,10 +78,10 @@ public class Product {
     @Override
     public String toString() {
         return
-                "\n" +  id + "," + productName + "," + productPrice + "," + productCategory.getRus();
+                id + "," + productName + "," + productPrice + "," + productCategory.getRus() + "\n";
     }
 
     public String toStringForFiles() {
-        return  id + "," + productName + "," + productPrice + "," + productCategory;
+        return id + "," + productName + "," + productPrice + "," + productCategory;
     }
 }

@@ -1,5 +1,7 @@
 package ru.comand.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.comand.Exceptions.ProductNotFoundException;
 import ru.comand.Enums.CategoryProduct;
 import ru.comand.model.Product;
@@ -13,6 +15,7 @@ public class ProductController {
     String productName;
     Integer productPrice;
     CategoryProduct productCategory;
+    final static Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     public ProductController(ProductService service) {
         this.productService = service;
@@ -41,7 +44,7 @@ public class ProductController {
                             return;
                         }
                         case 1 -> add();
-                        case 2 -> getAllProducts();
+                        case 2 -> System.out.println(getAllProducts());
                         case 3 -> {
                             System.out.println("Введите Id продукта ");
                             Scanner scan2 = new Scanner(System.in);
@@ -51,12 +54,12 @@ public class ProductController {
                         default -> System.out.println("Ошибка повторите");
                     }
                 } catch (ProductNotFoundException e) {
-                    System.out.println("Товара с таким Id нету");
+                    logger.warn("Товара с таким Id нету");
                 } catch (Exception e) {
-                    System.out.println();
+                    logger.error("{}{}", e.getMessage(), getClass().getName());
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Введите цифру");
+                logger.debug("Введите цифру");
             }
 
 
@@ -70,24 +73,21 @@ public class ProductController {
 
     public void add() {
         while (productName == null) {
-            System.out.println("Здравствуйте введите название товара ");
+            System.out.println("Введите название товара ");
             Scanner scan = new Scanner(System.in);
             productName = scan.nextLine();
         }
         while (productPrice == null) {
-
             System.out.println("Введите цену товара ");
-
             try {
                 Scanner scan = new Scanner(System.in);
                 productPrice = scan.nextInt();
             } catch (InputMismatchException _) {
-
+                logger.warn("Неверный ввод");
             }
         }
         System.out.println("Выберите категорию товара");
         while (productCategory == null) {
-
             System.out.println("1.FOOD  " +
                     "\n 2.ELECTRONICS " +
                     "\n 3.CLOTHING");
@@ -99,17 +99,18 @@ public class ProductController {
                         case 1 -> productCategory = CategoryProduct.FOOD;
                         case 2 -> productCategory = CategoryProduct.ELECTRONICS;
                         case 3 -> productCategory = CategoryProduct.CLOTHING;
-                        default -> System.out.println("Ошибка повторите");
+                        default -> logger.warn("Введите цифру из представленных");
                     }
                 } catch (Exception e) {
-                    System.out.println("Введите цифру из представленных");
+                    logger.error("Ошибка повторите");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Введите цифру из представленных");
+                logger.warn(e.getMessage());
+
             }
         }
-        String view = productService.addProduct(productName, productPrice, productCategory);
-        System.out.println(view);
+        logger.info("Продукт создан {}", productService.addProduct(productName, productPrice, productCategory));
+
         productName = null;
         productPrice = null;
         productCategory = null;
@@ -120,9 +121,9 @@ public class ProductController {
     /**
      * Выводит список всех продуктов
      */
-    public void getAllProducts() {
-        String view = productService.getAll().toString();
-        System.out.println(view);
+    public String getAllProducts() {
+        return productService.getAll().toString();
+
     }
 
     /**

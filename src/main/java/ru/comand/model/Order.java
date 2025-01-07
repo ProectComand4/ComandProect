@@ -23,8 +23,11 @@ public class Order {
     public Order(String customerFromFile) {
         String[] parts = customerFromFile.split("-");
         this.id = Integer.parseInt(parts[0]);
+        System.out.println(parts[1]);
         this.customer = new Customer(parts[1]);
+        System.out.println(parts[2]);
         this.product = new Product(parts[2]);
+        System.out.println(parts[3]);
         this.status = OrderStatus.toOrderStatus(parts[3]);
     }
 
@@ -76,7 +79,7 @@ public class Order {
     @Override
     public String toString() {
         return
-                "\n" + id + "-" + customer + "-" + product + "-" + status.getRus();
+                status.getRus() + id + "-" + customer + "-" + product + "-" + "\n";
     }
 
     public String toStringForFiles() {

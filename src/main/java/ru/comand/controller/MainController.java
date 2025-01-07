@@ -11,13 +11,19 @@ import ru.comand.service.ProductService;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MainController {
     Scanner scanner = new Scanner(System.in);
+    final static Logger logger = LoggerFactory.getLogger(MainController.class);
+
 
     /**
      * Запуск программы
      */
     public void startProgram() {
+        logger.info("Запуск");
         ProductRepository productRepository = new ProductRepository();
         ProductService productService = new ProductService(productRepository);
         ProductController productController = new ProductController(productService);
@@ -28,10 +34,12 @@ public class MainController {
 
         OrderRepository orderRepository = new OrderRepository();
         OrderService orderService = new OrderService(orderRepository);
-        OrderController orderController = new OrderController(orderService,customerController,productController);
+        OrderController orderController = new OrderController(orderService, customerController, productController);
 
 
         while (true) {
+
+
             System.out.println("\n1. Управление покупателями");
             System.out.println("2. Показать всех покупателей");
             System.out.println("3. Управление продуктами");
@@ -43,20 +51,21 @@ public class MainController {
                 int choice = scanner.nextInt();
                 switch (choice) {
                     case 1 -> customerController.start();
-                    case 2 -> customerController.getAllCustomers();
+                    case 2 -> System.out.println(customerController.getAllCustomers());
                     case 3 -> productController.start();
-                    case 4 -> productController.getAllProducts();
+                    case 4 -> System.out.println(productController.getAllProducts());
                     case 5 -> orderController.start();
-                    case 6 -> orderController.getAllOrders();
+                    case 6 -> System.out.println(orderController.getAllOrders());
                     default -> System.out.println("Введите число из предложенных");
                 }
             } catch (CustomerNotFoundException e) {
-                System.out.println(e.getMessage());
+                logger.debug(String.valueOf(e));
             } catch (InputMismatchException e) {
+                logger.debug(String.valueOf(e));
                 System.out.println("Ошибка. Введите число");
                 scanner.next();
             } catch (Exception e) {
-                System.out.println("Ошибка " + e.getMessage());
+                logger.error(String.valueOf(e));
             }
         }
 

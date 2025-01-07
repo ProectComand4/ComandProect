@@ -47,7 +47,7 @@ public enum OrderStatus {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Такого типа покупателей нет");
+        throw new IllegalArgumentException("Такого статуса заказа нету");
     }
 
 }

@@ -1,6 +1,8 @@
 package ru.comand.controller;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.comand.Exceptions.ProductNotFoundException;
 import ru.comand.model.Customer;
 import ru.comand.model.Product;
@@ -14,6 +16,7 @@ public class OrderController {
     private final OrderService orderService;
     private final CustomerController customerController;
     private final ProductController productController;
+    final static Logger logger = LoggerFactory.getLogger(OrderController.class);
     Product product;
     Customer customer;
 
@@ -54,15 +57,15 @@ public class OrderController {
                         default -> System.out.println("Ошибка повторите");
                     }
                 } catch (ProductNotFoundException e) {
-                    System.out.println("Заказа с таким Id нету");
+                    logger.warn("Товара с таким Id нету");
 
                 } catch (Exception e) {
-                    System.out.println();
+                    logger.error("{}{}", e.getMessage(), getClass().getName());
 
                 }
 
             } catch (InputMismatchException e) {
-                System.out.println("Введите цифру");
+                logger.debug("Введите цифру");
 
             }
 
@@ -73,11 +76,19 @@ public class OrderController {
     private void addOrder() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Список покупателей");
-        customerController.getAllCustomers();
+        try {
+            customerController.getAllCustomers();
+        } catch (NullPointerException e) {
+            logger.error(e.getMessage());
+        }
+
+
         System.out.println("Введите id покупателя");
         int id1 = scan.nextInt();
+
         System.out.println("Список продуктов");
         productController.getAllProducts();
+
         System.out.println("Введите id продукта");
         int id2 = scan.nextInt();
 
@@ -90,9 +101,9 @@ public class OrderController {
 
     }
 
-    public void getAllOrders() {
-        String view = orderService.getAll().toString();
-        System.out.println(view);
+    public String getAllOrders() {
+        return orderService.getAll().toString();
+
     }
 
     /**
