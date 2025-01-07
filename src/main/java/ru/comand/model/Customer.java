@@ -16,7 +16,7 @@ public class Customer {
     }
 
     public Customer(String customerFromFile) {
-        String[] parts = customerFromFile.split(";");
+        String[] parts = customerFromFile.split(",");
         this.id = Integer.parseInt(parts[0]);
         this.name = parts[1];
         this.type = CustomerType.toCustomerType(parts[2]);
@@ -61,7 +61,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "\nid - " + id + "," + name + "," + type.getRus();
+        return id + "," + name + "," + type.getRus() + "\n";
     }
 
 
@@ -70,6 +70,6 @@ public class Customer {
      * @return строку с информацией о покупателе
      */
     public String toStringForFiles() {
-        return id + ";" + name + ";" + type;
+        return id + "," + name + "," + type;
     }
 }

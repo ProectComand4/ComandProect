@@ -2,6 +2,7 @@ package ru.comand.repository;
 
 import ru.comand.Exceptions.ProductNotFoundException;
 import ru.comand.model.Order;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
@@ -41,7 +42,7 @@ public class OrderRepository {
     public Order save(Order newOrder) {
         newOrder.setId(++idOrder);
         try {
-            Files.write(pathOrder, (newOrder.toStringForFiles()).getBytes(), StandardOpenOption.APPEND);
+            Files.write(pathOrder, (newOrder.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
             Files.write(pathIdOrder, idOrder.toString().getBytes());
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -84,9 +84,9 @@ public class CustomerController {
     /**
      * Выводит список всех покупателей
      */
-    public void getAllCustomers() {
-        String view = customerService.getAll().toString();
-        System.out.println(view);
+    public String getAllCustomers() {
+     return customerService.getAll().toString();
+
     }
 
     /**

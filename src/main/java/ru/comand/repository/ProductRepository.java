@@ -44,7 +44,7 @@ public class ProductRepository {
         newProduct.setId(++idProduct);
 
         try {
-            Files.write(pathProducts, (newProduct.toStringForFiles()).getBytes(), StandardOpenOption.APPEND);
+            Files.write(pathProducts, (newProduct.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
             Files.write(pathIDProducts, idProduct.toString().getBytes());
         } catch (Exception e) {
             System.out.println(e.getMessage());
