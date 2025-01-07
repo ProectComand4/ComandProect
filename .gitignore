@@ -38,3 +38,10 @@ build/
 .DS_Store
 /src/main/java/ru/comand/repository/Files/customer.txt
 /src/main/java/ru/comand/repository/Files/customer.txt_id
+/src/main/java/ru/comand/repository/files_log/info.log
+/src/main/java/ru/comand/repository/files_log/infoError.log
+/src/main/java/ru/comand/repository/Files/order.txt
+/src/main/java/ru/comand/repository/Files/products.txt
+/src/main/java/ru/comand/repository/Files/idProducts.txt
+/src/main/java/ru/comand/repository/Files/idOrder.txt
+/src/main/java/ru/comand/repository/Files/IDcustomer.txt

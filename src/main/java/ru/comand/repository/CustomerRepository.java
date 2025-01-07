@@ -14,14 +14,11 @@ import java.util.Objects;
 public class CustomerRepository {
     private final Path filePath =
             Path.of("src/main/java/ru/comand/repository/files/customer.txt");
-    ;
     private final Path filePathID =
             Path.of("src/main/java/ru/comand/repository/files/idCustomer.txt");
-    ;
     private Integer id = 0;
 
     public CustomerRepository() {
-
         try {
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
@@ -73,7 +70,7 @@ public class CustomerRepository {
     public List<Customer> findAll() {
         try {
             return Files.readAllLines(filePath).stream()
-                    .map(l -> new Customer(l))
+                    .map(Customer::new)
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException("Ошибка чтения файла - " + e.getMessage());
