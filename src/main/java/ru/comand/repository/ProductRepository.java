@@ -1,12 +1,15 @@
 package ru.comand.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.comand.Exceptions.ProductNotFoundException;
 import ru.comand.model.Product;
 
 import java.io.IOException;
 import java.nio.file.*;
-
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 public class ProductRepository {
@@ -15,6 +18,8 @@ public class ProductRepository {
     public final Path pathIDProducts =
             Path.of("src/main/java/ru/comand/repository/files/idProducts.txt");
     public Integer idProduct = 0;
+    private static final Logger logger = LoggerFactory.getLogger(ProductRepository.class);
+
 
     public ProductRepository() {
 
@@ -23,19 +28,29 @@ public class ProductRepository {
             if (!Files.exists(Paths.get(pathProducts.toString()))) {
                 Files.createFile(pathProducts);
             }
-            if (!Files.exists(Paths.get(pathIDProducts.toString()))) {
+            if (Files.exists(pathIDProducts)) {
+                if (Files.readAllLines(pathProducts).stream()
+                        .map(Product::new)
+                        .max(Comparator.comparingInt(Product::getId))
+                        .isPresent()) {
+                    Product product = Files.readAllLines(pathProducts).stream()
+                            .map(Product::new)
+                            .max(Comparator.comparingInt(Product::getId))
+                            .get();
+                    Files.write(pathIDProducts, product.getId().toString().getBytes());
+                    idProduct = Integer.parseInt(Files.readString(pathIDProducts));
+                }
+            } else {
                 Files.createFile(pathIDProducts);
                 Files.write(pathIDProducts, idProduct.toString().getBytes());
-
-            } else {
-                idProduct = Integer.parseInt(Files.readString(pathIDProducts));
-
             }
 
         } catch (FileAlreadyExistsException e) {
             System.out.println("File already exists - " + e.getMessage());
         } catch (IOException e) {
-            System.out.println(e);
+            logger.warn(e.getMessage());
+        } catch (NoSuchElementException e) {
+            logger.warn("Файл с товарами пустой");
         }
 
     }

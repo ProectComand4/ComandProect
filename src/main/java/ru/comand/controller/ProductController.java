@@ -27,6 +27,7 @@ public class ProductController {
     public void start() {
 
         while (true) {
+            System.out.print("\n ===== Управление товарами =====");
             System.out.print("\n 1.Создать товар");
             System.out.print("\n 2.Список всех товаров");
             System.out.print("\n 3.Показать продукт по его ID ");

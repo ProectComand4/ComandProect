@@ -32,6 +32,7 @@ public enum CustomerType {
             default -> null;
         };
     }
+
     /**
      * Определяет тип покупателя по строке
      * @param rus String тип покупателя

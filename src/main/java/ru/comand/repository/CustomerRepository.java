@@ -1,37 +1,44 @@
 package ru.comand.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.comand.model.Customer;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 
 public class CustomerRepository {
-    private final Path filePath =
-            Path.of("src/main/java/ru/comand/repository/files/customer.txt");
-    private final Path filePathID =
-            Path.of("src/main/java/ru/comand/repository/files/idCustomer.txt");
-    private Integer id = 0;
+    private final Path filePath;
+    private final Path filePathID;
+    private Integer id;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerRepository.class);
 
     public CustomerRepository() {
+        id = 0;
+        this.filePath = Path.of("src/main/java/ru/comand/repository/Files/customer.txt");
+        this.filePathID = Path.of("src/main/java/ru/comand/repository/Files/customerID.txt");
         try {
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
             }
             if (Files.exists(filePathID)) {
-                if (Objects.equals(Files.readString(filePathID), "")) {
+                if (Files.readAllLines(filePath).stream()
+                        .map(Customer::new)
+                        .max(Comparator.comparingInt(Customer::getId))
+                        .isPresent()) {
                     Customer customer = Files.readAllLines(filePath).stream()
                             .map(Customer::new)
-                            .max((c1, c2) -> Integer.compare(c1.getId(), c2.getId()))
+                            .max(Comparator.comparingInt(Customer::getId))
                             .get();
                     Files.write(filePathID, customer.getId().toString().getBytes());
-                } // работает, но, если файл с покупателями пустой, программа начинается с описания исключения NoSuchElementException
-                id = Integer.parseInt(Files.readString(filePathID));
+                    id = Integer.parseInt(Files.readString(filePathID));
+                }
             } else {
                 Files.createFile(filePathID);
                 Files.write(filePathID, id.toString().getBytes());
@@ -39,7 +46,7 @@ public class CustomerRepository {
         } catch (IOException e) {
             System.out.println("Ошибка чтения файла - " + e.getMessage());
         } catch (NoSuchElementException e) {
-            System.out.println("Файл с покупателями пустой");
+            logger.warn("Файл с покупателями пустой");
         }
     }
 
