@@ -1,5 +1,7 @@
 package ru.comand.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.comand.Enums.CustomerType;
 import ru.comand.model.Customer;
 import ru.comand.repository.CustomerRepository;
@@ -8,6 +10,8 @@ import java.util.List;
 
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
+
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -29,7 +33,17 @@ public class CustomerService {
      * @return список всех покупателей
      */
     public List<Customer> getAll() {
-        return customerRepository.findAll();
+        try {
+            List<Customer> customers = customerRepository.findAll();
+            if (customers.isEmpty()) {
+                logger.warn("Список покупателей пуст");
+                System.out.println("Добавьте нового покупателя: ");
+            }
+            return customers;
+        } catch (Exception e) {
+            logger.error("Ошибка: {}", e.getMessage());
+            throw e;
+        }
     }
 
     /**

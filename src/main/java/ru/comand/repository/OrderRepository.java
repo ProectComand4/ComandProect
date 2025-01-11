@@ -1,72 +1,97 @@
 package ru.comand.repository;
 
-import ru.comand.Exceptions.ProductNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.comand.model.Order;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class OrderRepository {
 
-    public final Path pathOrder =
-            Path.of("src/main/java/ru/comand/repository/files/order.txt");
-    public final Path pathIdOrder =
-            Path.of("src/main/java/ru/comand/repository/files/idOrder.txt");
-    public Integer idOrder = 0;
+    private final Path filePath;
+    private final Path filePathID;
+    private Integer id;
+    private static final Logger logger = LoggerFactory.getLogger(OrderRepository.class);
 
     public OrderRepository() {
-
+        id = 0;
+        this.filePath = Path.of("src/main/java/ru/comand/repository/Files/order.txt");
+        this.filePathID = Path.of("src/main/java/ru/comand/repository/Files/orderID.txt");
         try {
-
-            if (!Files.exists(Paths.get(pathOrder.toString()))) {
-                Files.createFile(pathOrder);
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);
             }
-            if (!Files.exists(Paths.get(pathIdOrder.toString()))) {
-                Files.createFile(pathIdOrder);
-                Files.write(pathIdOrder, idOrder.toString().getBytes());
-
+            if (Files.exists(filePathID)) {
+                if (Files.readAllLines(filePath).stream()
+                        .map(Order::new)
+                        .max(Comparator.comparingInt(Order::getId))
+                        .isPresent()) {
+                    Order order = Files.readAllLines(filePath).stream()
+                            .map(Order::new)
+                            .max(Comparator.comparingInt(Order::getId))
+                            .get();
+                    Files.write(filePathID, order.getId().toString().getBytes());
+                    id = Integer.parseInt(Files.readString(filePathID));
+                }
             } else {
-                idOrder = Integer.parseInt(Files.readString(pathIdOrder));
-
+                Files.createFile(filePathID);
+                Files.write(filePathID, id.toString().getBytes());
             }
-
-        } catch (FileAlreadyExistsException e) {
-            System.out.println("File already exists - " + e.getMessage());
         } catch (IOException e) {
-            System.out.println(e);
+            System.out.println("Ошибка чтения файла - " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            logger.warn("Файл с заказами пустой");
         }
-
     }
 
-    public Order save(Order newOrder) {
-        newOrder.setId(++idOrder);
+    /**
+     * Сохраняет информацию о заказе в файл
+     * @param order заказ
+     * @return заказ
+     */
+    public Order save(Order order) {
+        order.setId(++id);
         try {
-            Files.write(pathOrder, (newOrder.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
-            Files.write(pathIdOrder, idOrder.toString().getBytes());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            Files.write(filePath, (order.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла - " + e.getMessage());
         }
-
-        return newOrder;
+        try {
+            Files.write(filePathID, id.toString().getBytes());
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла - " + e.getMessage());
+        }
+        return order;
     }
 
+    /**
+     * Собирает все заказы в список
+     * @return список заказов
+     */
     public List<Order> findAll() {
         try {
-            return Files.readAllLines(pathOrder)
-                    .stream()
+            return Files.readAllLines(filePath).stream()
                     .map(Order::new)
                     .toList();
         } catch (IOException e) {
-            throw new ProductNotFoundException(e.getMessage());
+            throw new RuntimeException("Ошибка чтения файла - " + e.getMessage());
         }
-
     }
 
-    public Order findById(int index) {
+    /**
+     * Находит заказ по ID
+     * @param ID ID заказа
+     * @return заказ с указанным ID
+     */
+    public Order findById(int ID) {
         return findAll().stream()
-                .filter(c -> c.getId().equals(index))
+                .filter(o -> o.getId().equals(ID))
                 .findFirst().orElse(null);
-
     }
 }

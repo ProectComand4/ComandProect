@@ -43,5 +43,5 @@ build/
 /src/main/java/ru/comand/repository/Files/order.txt
 /src/main/java/ru/comand/repository/Files/products.txt
 /src/main/java/ru/comand/repository/Files/idProducts.txt
-/src/main/java/ru/comand/repository/Files/idOrder.txt
-/src/main/java/ru/comand/repository/Files/IDcustomer.txt
+/src/main/java/ru/comand/repository/Files/customerID.txt
+/src/main/java/ru/comand/repository/Files/orderID.txt

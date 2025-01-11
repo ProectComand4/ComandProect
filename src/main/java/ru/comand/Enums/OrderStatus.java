@@ -1,11 +1,10 @@
 package ru.comand.Enums;
 
 public enum OrderStatus {
-
-    NEW("Новый заказ"),
-    PROCESSING("Обработка"),
-    COMPLETED("Завершенный"),
-    CANCELLED("Отмененный");
+    NEW("новый заказ"),
+    PROCESSING("заказ обрабатывается"),
+    COMPLETED("заказ завершён"),
+    CANCELLED("заказ отменён");
 
     private final String rus;
 
@@ -18,22 +17,21 @@ public enum OrderStatus {
     }
 
     /**
-     * Определяет статус заказа
-     * @param choice число, соответствующее статус заказа
-     * @return тип покупателя
+     * Меняет статус заказа
+     * @param choice число, соответствующее статусу заказа
+     * @return статус заказа
      */
-    public static OrderStatus selectOrderStatus(int choice) {
-        if (choice < 1 || choice > 4) {
+    public static OrderStatus changeOrderStatus(int choice) {
+        if (choice < 1 || choice > 3) {
             System.out.println("Введите число из предложенных");
 
         }
-        return switch (choice) {
-            case 1 -> NEW;
-            case 2 -> PROCESSING;
-            case 3 -> COMPLETED;
-            case 4 -> CANCELLED;
-            default -> null;
-        };
+        for (OrderStatus orderStatus : OrderStatus.values()) {
+            if (orderStatus.ordinal() == choice) {
+                return orderStatus;
+            }
+        }
+        throw new IllegalArgumentException("Заказов с таким статусом нет");
     }
 
     /**
@@ -42,12 +40,11 @@ public enum OrderStatus {
      * @return Enum статус заказа
      */
     public static OrderStatus toOrderStatus(String rus) {
-        for (OrderStatus type : OrderStatus.values()) {
-            if (type.name().equalsIgnoreCase(rus)) {
-                return type;
+        for (OrderStatus status : OrderStatus.values()) {
+            if (status.name().equalsIgnoreCase(rus)) {
+                return status;
             }
         }
-        throw new IllegalArgumentException("Такого статуса заказа нету");
+        throw new IllegalArgumentException("Такого статуса нет");
     }
-
 }

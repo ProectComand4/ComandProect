@@ -1,7 +1,12 @@
 package ru.comand.model;
 
 import ru.comand.Enums.CategoryProduct;
+import ru.comand.Exceptions.ProductNotFoundException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class Product {
@@ -83,5 +88,26 @@ public class Product {
 
     public String toStringForFiles() {
         return id + "," + productName + "," + productPrice + "," + productCategory;
+    }
+
+    /**
+     * Находит товар по ID
+     * @param id ID товара
+     * @return товар с указанным ID
+     */
+    public static Product toProduct(int id) {
+        Path filePath = Path.of("src/main/java/ru/comand/repository/Files/products.txt");
+        try {
+            return Files.readAllLines(filePath).stream()
+                    .map(Product::new)
+                    .filter(p -> p.getId().equals(id))
+                    .findFirst().orElse(null);
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла - " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            System.out.println("Файл с товарами пустой");
+        }
+        throw new ProductNotFoundException("Товаров с таким ID нет");
+
     }
 }

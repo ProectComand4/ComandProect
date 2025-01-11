@@ -34,28 +34,34 @@ public class MainController {
 
         OrderRepository orderRepository = new OrderRepository();
         OrderService orderService = new OrderService(orderRepository);
-        OrderController orderController = new OrderController(orderService, customerController, productController);
+        OrderController orderController = new OrderController(orderService, customerService, productService, customerController, productController);
 
 
         while (true) {
 
 
-            System.out.println("\n1. Управление покупателями");
+            System.out.println("\n===== Главное меню =====");
+            System.out.println("1. Управление покупателями");
             System.out.println("2. Показать всех покупателей");
             System.out.println("3. Управление продуктами");
             System.out.println("4. Показать все продукты");
             System.out.println("5. Управление заказами");
             System.out.println("6. Показать все заказы");
+            System.out.println("0. Выйти");
             System.out.print("\nВыберите нужную опцию: ");
             try {
                 int choice = scanner.nextInt();
                 switch (choice) {
+                    case 0 -> {
+                        System.out.println("Вы вышли из программы");
+                        return;
+                    }
                     case 1 -> customerController.start();
-                    case 2 -> System.out.println(customerController.getAllCustomers());
+                    case 2 -> System.out.println(customerService.getAll());
                     case 3 -> productController.start();
                     case 4 -> System.out.println(productController.getAllProducts());
                     case 5 -> orderController.start();
-                    case 6 -> System.out.println(orderController.getAllOrders());
+                    case 6 -> System.out.println(orderService.getAll());
                     default -> System.out.println("Введите число из предложенных");
                 }
             } catch (CustomerNotFoundException e) {
