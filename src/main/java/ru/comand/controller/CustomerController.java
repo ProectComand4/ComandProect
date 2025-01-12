@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.comand.Enums.CustomerType;
 import ru.comand.Exceptions.CustomerNotFoundException;
+import ru.comand.model.Customer;
 import ru.comand.service.CustomerService;
 
 import java.util.InputMismatchException;
@@ -93,7 +94,7 @@ public class CustomerController {
     /**
      * Выводит список всех покупателей
      */
-    private void getAllCustomers() {
+    public void getAllCustomers() {
         String view = customerService.getAll().toString();
         System.out.println(view);
     }
@@ -102,10 +103,9 @@ public class CustomerController {
      * Выводит покупателя с указанным ID
      * @param id ID покупателя
      */
-    private void getCustomerById(int id) {
+    public Customer getCustomerById(int id) {
         try {
-            String view = customerService.getByID(id).toString();
-            System.out.println(view);
+            return customerService.getByID(id);
         } catch (NullPointerException e) {
             throw new CustomerNotFoundException(id);
         }

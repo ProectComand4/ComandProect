@@ -66,7 +66,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "\nid - " + id + ", имя покупателя - " + name + ", тип покупателя - " + type.getRus();
+        return id + "," + name + "," + type.getRus();
     }
 
     /**

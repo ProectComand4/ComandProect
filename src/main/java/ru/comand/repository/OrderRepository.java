@@ -94,4 +94,19 @@ public class OrderRepository {
                 .filter(o -> o.getId().equals(ID))
                 .findFirst().orElse(null);
     }
+
+    public void saveStatus(List<Order> orderList) {
+        try {
+            Files.write(filePath, "".getBytes());
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла - " + e.getMessage());
+        }
+        for (Order order : orderList) {
+            try {
+                Files.write(filePath, (order.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                System.out.println("Ошибка чтения файла - " + e.getMessage());
+            }
+        }
+    }
 }
