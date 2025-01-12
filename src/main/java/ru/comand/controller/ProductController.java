@@ -110,7 +110,7 @@ public class ProductController {
 
             }
         }
-        logger.info("Продукт создан {}", productService.addProduct(productName, productPrice, productCategory));
+        logger.info("Продукт создан {}", productService.addProduct(productName, productPrice, productCategory) + "\n");
 
         productName = null;
         productPrice = null;

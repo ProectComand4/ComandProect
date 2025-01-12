@@ -7,6 +7,7 @@ import ru.comand.model.Customer;
 import ru.comand.model.Order;
 import ru.comand.model.Product;
 import ru.comand.repository.OrderRepository;
+
 import java.util.List;
 
 public class OrderService {
@@ -22,11 +23,11 @@ public class OrderService {
      * Добавляет информацию о заказе в репозиторий
      * @param customer покупатель
      * @param products список покупок
-     * @param status статус заказа
      * @return сохранённый заказ
      */
-    public Order addOrder(Customer customer, List<Product> products, OrderStatus status) {
-        Order newOrder = new Order(customer, products, status);
+    public Order addOrder(Customer customer, Product products) {
+
+        Order newOrder = new Order(null, customer, products, OrderStatus.NEW);
         return orderRepository.save(newOrder);
     }
 
@@ -53,7 +54,13 @@ public class OrderService {
      * @param id ID заказа
      * @return заказ с указанным ID
      */
-    public Order getByID(int id) {
+    public Order getById(int id) {
         return orderRepository.findById(id);
     }
+
+    public void saveFromFile(List<Order> orders) {
+
+        orderRepository.saveStatus(orders);
+    }
+
 }
