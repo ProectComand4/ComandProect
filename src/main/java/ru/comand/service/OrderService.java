@@ -25,9 +25,8 @@ public class OrderService {
      * @param products список покупок
      * @return сохранённый заказ
      */
-    public Order addOrder(Customer customer, Product products) {
-
-        Order newOrder = new Order(null, customer, products, OrderStatus.NEW);
+    public Order addOrder(Customer customer, List<Product> products, OrderStatus status) {
+        Order newOrder = new Order(customer, products, status);
         return orderRepository.save(newOrder);
     }
 

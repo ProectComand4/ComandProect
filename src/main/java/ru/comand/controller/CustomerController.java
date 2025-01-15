@@ -3,8 +3,8 @@ package ru.comand.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.comand.Enums.CustomerType;
+import ru.comand.Enums.OrderStatus;
 import ru.comand.Exceptions.CustomerNotFoundException;
-import ru.comand.model.Customer;
 import ru.comand.service.CustomerService;
 
 import java.util.InputMismatchException;
@@ -68,15 +68,14 @@ public class CustomerController {
      * Добавляет нового покупателя
      */
     private void addCustomer() {
-        logger.debug("Добавление покупателя");
         while ((customerName = scanner.nextLine()).trim().isEmpty()) {
-            System.out.print("Введите имя покупателя: ");
+            System.out.println("\nВведите имя покупателя: ");
         }
         while (customerType == null) {
-            System.out.println("Выберите статус покупателя: " +
-                    "\n1. Новый покупатель" +
-                    "\n2. Постоянный покупатель" +
-                    "\n3. VIP покупатель");
+            System.out.println("Выберите статус покупателя: ");
+            for (CustomerType ct : CustomerType.values()) {
+                System.out.println((ct.ordinal() + 1) + " - " + ct.getRus());
+            }
             try {
                 int choice = scanner.nextInt();
                 customerType = CustomerType.selectCustomerType(choice);
@@ -103,9 +102,10 @@ public class CustomerController {
      * Выводит покупателя с указанным ID
      * @param id ID покупателя
      */
-    public Customer getCustomerById(int id) {
+    public void getCustomerById(int id) {
         try {
-            return customerService.getByID(id);
+            String view = customerService.getByID(id).toString();
+            System.out.println(view);
         } catch (NullPointerException e) {
             throw new CustomerNotFoundException(id);
         }
