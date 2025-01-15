@@ -40,12 +40,12 @@ public class CustomerController {
                         System.out.println("Выход в главное меню");
                         return;
                     }
-                    case 1 -> addCustomer();
-                    case 2 -> getAllCustomers();
+                    case 1 -> add();
+                    case 2 -> getAll();
                     case 3 -> {
                         System.out.print("Введите ID покупателя: ");
                         int id = scanner.nextInt();
-                        getCustomerById(id);
+                        getById(id);
                     }
                     default -> {
                         logger.warn("Неподходящее число");
@@ -68,7 +68,7 @@ public class CustomerController {
     /**
      * Добавляет нового покупателя
      */
-    private void addCustomer() {
+    private void add() {
         while ((customerName = scanner.nextLine()).trim().isEmpty()) {
             System.out.println("\nВведите имя покупателя: ");
         }
@@ -94,7 +94,7 @@ public class CustomerController {
     /**
      * Выводит список всех покупателей
      */
-    public List<Customer> getAllCustomers() {
+    public List<Customer> getAll() {
         return customerService.getAll();
     }
 
@@ -102,7 +102,7 @@ public class CustomerController {
      * Выводит покупателя с указанным ID
      * @param id ID покупателя
      */
-    public Customer getCustomerById(int id) {
+    public Customer getById(int id) {
         if (customerService.getByID(id) == null) {
             throw new CustomerNotFoundException(id);
         }

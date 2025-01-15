@@ -59,7 +59,7 @@ public class OrderService {
 
     public void saveFromFile(List<Order> orders) {
 
-        orderRepository.saveStatus(orders);
+        orderRepository.changeStatus(orders);
     }
 
 }
