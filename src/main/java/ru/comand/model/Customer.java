@@ -1,12 +1,7 @@
 package ru.comand.model;
 
 import ru.comand.Enums.CustomerType;
-import ru.comand.Exceptions.CustomerNotFoundException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class Customer {
@@ -66,7 +61,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return id + "," + name + "," + type.getRus();
+        return "\nid - " + id + ", имя покупателя - " + name + ", тип покупателя - " + type.getRus();
     }
 
     /**
@@ -77,24 +72,4 @@ public class Customer {
         return id + ";" + name + ";" + type;
     }
 
-    /**
-     * Находит покупателя по ID
-     * @param id ID покупателя
-     * @return покупателя с указанным ID
-     */
-    public static Customer toCustomer(int id) {
-        Path filePath = Path.of("src/main/java/ru/comand/repository/Files/customer.txt");
-        try {
-            return Files.readAllLines(filePath).stream()
-                    .map(Customer::new)
-                    .filter(c -> c.getId().equals(id))
-                    .findFirst().orElse(null);
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла - " + e.getMessage());
-        } catch (NoSuchElementException e) {
-            System.out.println("Файл с покупателями пустой");
-        }
-        throw new CustomerNotFoundException(id);
-
-    }
 }

@@ -3,13 +3,14 @@ package ru.comand.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.comand.Enums.CategoryProduct;
 import ru.comand.Enums.OrderStatus;
 import ru.comand.Exceptions.ProductNotFoundException;
 import ru.comand.model.Customer;
 import ru.comand.model.Order;
 import ru.comand.model.Product;
+import ru.comand.service.CustomerService;
 import ru.comand.service.OrderService;
+import ru.comand.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -19,29 +20,24 @@ import java.util.Scanner;
 
 public class OrderController {
     private final OrderService orderService;
-    private final CustomerController customerController;
-    private final ProductController productController;
+    private final CustomerService customerService;
+    private final ProductService productService;
     final static Logger logger = LoggerFactory.getLogger(OrderController.class);
-    Product product;
-    Customer customer;
 
-    public OrderController(OrderService orderService,
-                           CustomerController customerController,
-                           ProductController productController) {
+    public OrderController(OrderService orderService, CustomerService customerService, ProductService productService) {
         this.orderService = orderService;
-        this.customerController = customerController;
-        this.productController = productController;
+        this.customerService = customerService;
+        this.productService = productService;
     }
-
 
     public void start() {
         while (true) {
-            System.out.print("\n 1.Создать заказ");
-            System.out.print("\n 2.Список всех заказов");
-            System.out.print("\n 3.Показать заказ по его ID ");
-            System.out.print("\n 4.Изменить статус заказ ");
-            System.out.print("\n 0.Назад ");
-            System.out.print("\n Выберите нужную опцию");
+            System.out.print("\n1.Создать заказ");
+            System.out.println("\n2.Список всех заказов");
+            System.out.println("3.Показать заказ по его ID ");
+            System.out.println("4.Изменить статус заказ ");
+            System.out.println("0.Назад ");
+            System.out.print("\nВыберите нужную опцию: ");
 
 
             try {
@@ -65,15 +61,16 @@ public class OrderController {
                         }
                         case 4 -> {
                             System.out.println(getAllOrders());
-                            System.out.println("Введите Id заказа ");
+                            System.out.println("Выберите заказ по ID: ");
                             Scanner scan2 = new Scanner(System.in);
                             int id = scan2.nextInt();
-                            System.out.println("1 - " + OrderStatus.NEW.getRus());
-                            System.out.println("2 - " + OrderStatus.PROCESSING.getRus());
-                            System.out.println("3 - " + OrderStatus.COMPLETED.getRus());
-                            System.out.println("4 - " + OrderStatus.CANCELLED.getRus());
-                            int statusChoice = scan.nextInt();
 
+                            for (OrderStatus os : OrderStatus.values()) {
+                                System.out.println((os.ordinal() + 1) + " - " + os.getRus());
+                            }
+
+                            System.out.println("Выберите статус заказа: ");
+                            int statusChoice = scan.nextInt();
                             OrderStatus oS = null;
                             switch (statusChoice) {
                                 case 1 -> oS = OrderStatus.NEW;
@@ -82,14 +79,13 @@ public class OrderController {
                                 case 4 -> oS = OrderStatus.CANCELLED;
                                 default -> logger.warn("Введите цифру из представленных");
                             }
-
-
-                            orderStatusNew(getIndexOrder(id), oS);
+                            System.out.println("Статус заказа успешно изменён - ");
+                            changeOrderStatus(getIndexOrder(id), oS);
                         }
                         default -> System.out.println("Ошибка повторите");
                     }
                 } catch (ProductNotFoundException e) {
-                    logger.warn("Товара с таким Id нету");
+                    logger.warn("Товара с таким Id нет");
 
                 } catch (Exception e) {
                     logger.error("{}{}", e.getMessage(), getClass().getName());
@@ -100,8 +96,6 @@ public class OrderController {
                 logger.debug("Введите цифру");
 
             }
-
-
         }
     }
 
@@ -109,7 +103,7 @@ public class OrderController {
         Scanner scan = new Scanner(System.in);
         System.out.println("Список покупателей");
         try {
-            customerController.getAllCustomers();
+            System.out.println(customerService.getAll());
         } catch (NullPointerException e) {
             logger.error(e.getMessage());
         }
@@ -117,20 +111,31 @@ public class OrderController {
 
         System.out.println("Введите id покупателя");
         int id1 = scan.nextInt();
+        Customer customer = customerService.getByID(id1);
 
         System.out.println("Список продуктов");
-        System.out.println(productController.getAllProducts());
+        System.out.println(productService.getAll());
 
-        System.out.println("Введите id продукта");
-        int id2 = scan.nextInt();
+        List<Product> products = new ArrayList<>();
+        boolean hasProduct = true;
+        while (hasProduct) {
+            System.out.println("\nДобавить товар в заказ по ID: ");
+            int productChoice = scan.nextInt();
+            products.add(productService.getById(productChoice));
+            System.out.println("Добавить еще: ");
+            System.out.println("1 - да: ");
+            System.out.println("0 - нет: ");
+            int addProductChoice = scan.nextInt();
+            if (addProductChoice < 0 || addProductChoice > 1) {
+                logger.warn("Неподходящее число");
+                System.out.println("Введите число из предложенных");
+            }
+            hasProduct = addProductChoice == 1;
+        }
+        OrderStatus orderStatus = OrderStatus.NEW;
 
-        Customer customer = customerController.getCustomerById(id1);
-        Product product = productController.getIndexProduct(id2);
-
-
-        String view = orderService.addOrder(customer, product).toStringForFiles();
+        String view = orderService.addOrder(customer, products, orderStatus).toString();
         System.out.println(view);
-
     }
 
     public String getAllOrders() {
@@ -151,16 +156,13 @@ public class OrderController {
         }
     }
 
-    public void orderStatusNew(Order order, OrderStatus status) {
-
+    public void changeOrderStatus(Order order, OrderStatus status) {
         List<Order> list = orderService.getAll();
         Order orders = list.stream()
                 .filter(order1 -> order1.equals(order))
                 .peek(order1 -> order1.setStatus(status))
                 .findFirst().orElse(null);
-
         orderService.saveFromFile(list);
-
-
+        System.out.println(orders);
     }
 }
