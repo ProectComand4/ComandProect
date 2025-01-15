@@ -8,6 +8,7 @@ import ru.comand.model.Product;
 import ru.comand.service.ProductService;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProductController {
@@ -122,8 +123,8 @@ public class ProductController {
     /**
      * Выводит список всех продуктов
      */
-    public String getAllProducts() {
-        return productService.getAll().toString();
+    public List<Product> getAllProducts() {
+        return productService.getAll();
 
     }
 
