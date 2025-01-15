@@ -17,24 +17,6 @@ public enum OrderStatus {
     }
 
     /**
-     * Меняет статус заказа
-     * @param choice число, соответствующее статусу заказа
-     * @return статус заказа
-     */
-    public static OrderStatus changeOrderStatus(int choice) {
-        if (choice < 1 || choice > 3) {
-            System.out.println("Введите число из предложенных");
-
-        }
-        for (OrderStatus orderStatus : OrderStatus.values()) {
-            if (orderStatus.ordinal() == choice) {
-                return orderStatus;
-            }
-        }
-        throw new IllegalArgumentException("Заказов с таким статусом нет");
-    }
-
-    /**
      * Определяет статус заказа по строке
      * @param rus String статус заказа
      * @return Enum статус заказа

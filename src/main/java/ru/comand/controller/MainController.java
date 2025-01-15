@@ -35,7 +35,7 @@ public class MainController {
         OrderRepository orderRepository = new OrderRepository();
         OrderService orderService = new OrderService(orderRepository);
         OrderController orderController =
-                new OrderController(orderService, customerService, productService);
+                new OrderController(orderService, customerController, productController);
 
 
         while (true) {

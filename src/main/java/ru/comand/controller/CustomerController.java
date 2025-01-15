@@ -3,11 +3,12 @@ package ru.comand.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.comand.Enums.CustomerType;
-import ru.comand.Enums.OrderStatus;
 import ru.comand.Exceptions.CustomerNotFoundException;
+import ru.comand.model.Customer;
 import ru.comand.service.CustomerService;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class CustomerController {
@@ -86,28 +87,25 @@ public class CustomerController {
         }
         String view = customerService.addCustomer(customerName, customerType).toString();
         System.out.println("Добавлен покупатель - " + view);
-        logger.info("Покупатель добавлен - {}", view);
+        logger.info("Покупатель добавлен успешно");
         customerType = null;
     }
 
     /**
      * Выводит список всех покупателей
      */
-    public void getAllCustomers() {
-        String view = customerService.getAll().toString();
-        System.out.println(view);
+    public List<Customer> getAllCustomers() {
+        return customerService.getAll();
     }
 
     /**
      * Выводит покупателя с указанным ID
      * @param id ID покупателя
      */
-    public void getCustomerById(int id) {
-        try {
-            String view = customerService.getByID(id).toString();
-            System.out.println(view);
-        } catch (NullPointerException e) {
+    public Customer getCustomerById(int id) {
+        if (customerService.getByID(id) == null) {
             throw new CustomerNotFoundException(id);
         }
+        return customerService.getByID(id);
     }
 }
