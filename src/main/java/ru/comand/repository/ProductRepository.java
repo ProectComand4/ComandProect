@@ -55,6 +55,11 @@ public class ProductRepository {
 
     }
 
+    /**
+     * Сохраняет информацию о продукте в файл
+     * @param newProduct продукт
+     * @return продукт
+     */
     public void save(Product newProduct) {
         newProduct.setId(++idProduct);
 
@@ -67,6 +72,10 @@ public class ProductRepository {
 
     }
 
+    /**
+     * Собирает все продукты в список
+     * @return список продуктов
+     */
     public List<Product> findAll() {
         try {
             return Files.readAllLines(pathProducts)
@@ -79,9 +88,14 @@ public class ProductRepository {
 
     }
 
-    public Product findById(int index) {
+    /**
+     * Находит продукт по id
+     * @param id id заказа
+     * @return заказ с указанным ID
+     */
+    public Product findById(int id) {
         return findAll().stream()
-                .filter(c -> c.getId().equals(index))
+                .filter(c -> c.getId().equals(id))
                 .findFirst().orElse(null);
 
     }

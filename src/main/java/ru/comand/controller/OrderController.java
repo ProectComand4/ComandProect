@@ -36,7 +36,8 @@ public class OrderController {
         while (true) {
             System.out.print("\n1.Создать заказ");
             System.out.println("\n2.Список всех заказов");
-            System.out.println("3.Показать заказ по его ID ");System.out.println("4.Изменить статус заказ ");
+            System.out.println("3.Показать заказ по его ID ");
+            System.out.println("4.Изменить статус заказ ");
             System.out.println("0.Назад ");
             System.out.print("\nВыберите нужную опцию: ");
 
@@ -48,20 +49,19 @@ public class OrderController {
                         System.out.println("Выход в главное меню");
                         return;
                     }
-                    case 1 -> addOrder();
-                    case 2 -> getAllOrders();
+                    case 1 -> add();
+                    case 2 -> getAll();
                     case 3 -> {
-                        getAllOrders();
+                        getAll();
                         System.out.println("Введите Id заказа ");
                         int id = scan.nextInt();
-                        System.out.println(getIndexOrder(id).toString());
-
+                        System.out.println(getById(id).toString());
                     }
                     case 4 -> {
-                        getAllOrders();
+                        getAll();
                         System.out.println("Выберите заказ по ID: ");
                         int id = scan.nextInt();
-                        if (getIndexOrder(id) == null) {
+                        if (getById(id) == null) {
                             throw new OrderNotFoundException(id);
                         }
 
@@ -80,7 +80,7 @@ public class OrderController {
                             default -> logger.warn("Введите цифру из представленных");
                         }
                         System.out.println("Статус заказа успешно изменён - ");
-                        changeOrderStatus(getIndexOrder(id), oS);
+                        changeOrderStatus(getById(id), oS);
                     }
                     default -> System.out.println("Ошибка повторите");
                 }
@@ -96,17 +96,17 @@ public class OrderController {
         }
     }
 
-    private void addOrder() {
+    private void add() {
         try {
-            if (customerController.getAllCustomers().isEmpty()) {
+            if (customerController.getAll().isEmpty()) {
                 customerController.start();
             }
-            System.out.println(customerController.getAllCustomers());
+            System.out.println(customerController.getAll());
             while (customer == null) {
                 System.out.println("Введите id покупателя: ");
                 try {
                     int id1 = scan.nextInt();
-                    customer = customerController.getCustomerById(id1);
+                    customer = customerController.getById(id1);
                 } catch (CustomerNotFoundException e) {
                     logger.warn("Значение ID вне диапазона");
                     System.out.println(e.getMessage());
@@ -118,7 +118,7 @@ public class OrderController {
                     logger.error("Ошибка {}", e.getMessage());
                 }
             }
-            if (productController.getAllProducts().isEmpty()) {
+            if (productController.getAll().isEmpty()) {
                 logger.warn("Список товаров пуст");
                 System.out.println("Добавьте товары: ");
                 productController.start();
@@ -129,13 +129,13 @@ public class OrderController {
             while (hasProduct) {
                 try {
                     System.out.println("\nСписок продуктов");
-                    System.out.println(productController.getAllProducts());
+                    System.out.println(productController.getAll());
                     System.out.println("\nДобавить товар в заказ по ID: ");
                     int productChoice = scan.nextInt();
-                    if (productController.getIndexProduct(productChoice) == null) {
+                    if (productController.getById(productChoice) == null) {
                         throw new ProductNotFoundException("Товар с указанным ID не найден");
                     }
-                    products.add(productController.getIndexProduct(productChoice));
+                    products.add(productController.getById(productChoice));
 
                     System.out.println("Добавить еще: ");
                     System.out.println("1 - да: ");
@@ -174,7 +174,7 @@ public class OrderController {
         }
     }
 
-    public void getAllOrders() {
+    public void getAll() {
         System.out.println(orderService.getAll().toString());
     }
 
@@ -182,7 +182,7 @@ public class OrderController {
      * Выводит заказ с указанным ID
      * @param id Id заказа
      */
-    public Order getIndexOrder(int id) {
+    public Order getById(int id) {
         if (orderService.getById(id) == null) {
             throw new OrderNotFoundException(id);
         }
@@ -195,7 +195,7 @@ public class OrderController {
                 .filter(order1 -> order1.equals(order))
                 .peek(order1 -> order1.setStatus(status))
                 .findFirst().orElse(null);
-            orderService.saveFromFile(list);
-            System.out.println(orders);
+        orderService.saveFromFile(list);
+        System.out.println(orders);
     }
 }

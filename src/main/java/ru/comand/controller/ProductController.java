@@ -46,12 +46,12 @@ public class ProductController {
                             return;
                         }
                         case 1 -> add();
-                        case 2 -> System.out.println(getAllProducts());
+                        case 2 -> System.out.println(getAll());
                         case 3 -> {
                             System.out.println("Введите Id продукта ");
                             Scanner scan2 = new Scanner(System.in);
                             int id = scan2.nextInt();
-                            System.out.println(getIndexProduct(id));
+                            System.out.println(getById(id));
                         }
                         default -> System.out.println("Ошибка повторите");
                     }
@@ -123,7 +123,7 @@ public class ProductController {
     /**
      * Выводит список всех продуктов
      */
-    public List<Product> getAllProducts() {
+    public List<Product> getAll() {
         return productService.getAll();
 
     }
@@ -132,7 +132,7 @@ public class ProductController {
      * Выводит продукт с указанным ID
      * @param id ID продукта
      */
-    public Product getIndexProduct(int id) {
+    public Product getById(int id) {
         try {
             return productService.getById(id);
 
