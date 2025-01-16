@@ -19,10 +19,10 @@ public class CustomerRepository {
     private Integer id;
     private static final Logger logger = LoggerFactory.getLogger(CustomerRepository.class);
 
-    public CustomerRepository() {
+    public CustomerRepository(String fileP, String pathID) {
         id = 0;
-        this.filePath = Path.of("src/main/java/ru/comand/repository/Files/customer.txt");
-        this.filePathID = Path.of("src/main/java/ru/comand/repository/Files/customerID.txt");
+        this.filePath = Path.of(fileP);
+        this.filePathID = Path.of(pathID);
         try {
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);

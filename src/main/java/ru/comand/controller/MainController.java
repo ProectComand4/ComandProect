@@ -24,15 +24,22 @@ public class MainController {
      */
     public void startProgram() {
         logger.info("Запуск");
-        ProductRepository productRepository = new ProductRepository();
+        ProductRepository productRepository = new ProductRepository
+                ("src/main/java/ru/comand/repository/files/products.txt",
+                        "src/main/java/ru/comand/repository/files/productsId.txt"
+                );
         ProductService productService = new ProductService(productRepository);
         ProductController productController = new ProductController(productService);
 
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepository customerRepository = new CustomerRepository
+                ("src/main/java/ru/comand/repository/Files/customer.txt",
+                        "src/main/java/ru/comand/repository/Files/customerID.txt");
         CustomerService customerService = new CustomerService(customerRepository);
         CustomerController customerController = new CustomerController(customerService);
 
-        OrderRepository orderRepository = new OrderRepository();
+        OrderRepository orderRepository = new OrderRepository
+                ("src/main/java/ru/comand/repository/Files/order.txt",
+                        "src/main/java/ru/comand/repository/Files/orderID.txt");
         OrderService orderService = new OrderService(orderRepository);
         OrderController orderController =
                 new OrderController(orderService, customerController, productController);
