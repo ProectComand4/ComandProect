@@ -67,7 +67,7 @@ public class MainController {
                     case 1 -> customerController.start();
                     case 2 -> System.out.println(customerService.getAll());
                     case 3 -> productController.start();
-                    case 4 -> System.out.println(productController.getAllProducts());
+                    case 4 -> System.out.println(productController.getAll());
                     case 5 -> orderController.start();
                     case 6 -> System.out.println(orderService.getAll());
                     default -> System.out.println("Введите число из предложенных");

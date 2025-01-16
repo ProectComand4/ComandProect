@@ -70,6 +70,7 @@ public class OrderRepository {
         return order;
     }
 
+
     /**
      * Собирает все заказы в список
      * @return список заказов
@@ -85,17 +86,21 @@ public class OrderRepository {
     }
 
     /**
-     * Находит заказ по ID
-     * @param ID ID заказа
-     * @return заказ с указанным ID
+     * Находит заказ по id
+     * @param id id заказа
+     * @return заказ с указанным id
      */
-    public Order findById(int ID) {
+    public Order findById(int id) {
         return findAll().stream()
-                .filter(o -> o.getId().equals(ID))
+                .filter(o -> o.getId().equals(id))
                 .findFirst().orElse(null);
     }
 
-    public void saveStatus(List<Order> orderList) {
+    /**
+     * Изменяет статус Заказа
+     * @param orderList
+     */
+    public void changeStatus(List<Order> orderList) {
         try {
             Files.write(filePath, "".getBytes());
         } catch (IOException e) {

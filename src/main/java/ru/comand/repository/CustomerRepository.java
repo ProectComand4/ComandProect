@@ -80,6 +80,7 @@ public class CustomerRepository {
                     .map(Customer::new)
                     .toList();
         } catch (IOException e) {
+            logger.error("Ошибка чтения файла - {}", e.getMessage());
             throw new RuntimeException("Ошибка чтения файла - " + e.getMessage());
         }
     }
