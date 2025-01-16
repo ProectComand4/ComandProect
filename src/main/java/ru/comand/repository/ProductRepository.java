@@ -13,15 +13,15 @@ import java.util.NoSuchElementException;
 
 
 public class ProductRepository {
-    public final Path pathProducts =
-            Path.of("src/main/java/ru/comand/repository/files/products.txt");
-    public final Path pathIDProducts =
-            Path.of("src/main/java/ru/comand/repository/files/idProducts.txt");
+    private final Path pathProducts;
+    private final Path pathIDProducts;
     public Integer idProduct = 0;
     private static final Logger logger = LoggerFactory.getLogger(ProductRepository.class);
 
 
-    public ProductRepository() {
+    public ProductRepository(String pathP, String pathID) {
+        this.pathProducts = Path.of(pathP);
+        this.pathIDProducts = Path.of(pathID);
 
         try {
 
@@ -56,14 +56,15 @@ public class ProductRepository {
     }
 
     public void save(Product newProduct) {
-        newProduct.setId(++idProduct);
 
+        newProduct.setId(++idProduct);
         try {
             Files.write(pathProducts, (newProduct.toStringForFiles() + "\n").getBytes(), StandardOpenOption.APPEND);
             Files.write(pathIDProducts, idProduct.toString().getBytes());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
 
     }
 
@@ -78,6 +79,7 @@ public class ProductRepository {
         }
 
     }
+
 
     public Product findById(int index) {
         return findAll().stream()

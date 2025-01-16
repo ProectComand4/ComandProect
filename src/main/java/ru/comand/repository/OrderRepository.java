@@ -19,10 +19,10 @@ public class OrderRepository {
     private Integer id;
     private static final Logger logger = LoggerFactory.getLogger(OrderRepository.class);
 
-    public OrderRepository() {
+    public OrderRepository(String path, String pathId) {
         id = 0;
-        this.filePath = Path.of("src/main/java/ru/comand/repository/Files/order.txt");
-        this.filePathID = Path.of("src/main/java/ru/comand/repository/Files/orderID.txt");
+        this.filePath = Path.of(path);
+        this.filePathID = Path.of(pathId);
         try {
             if (!Files.exists(filePath)) {
                 Files.createFile(filePath);
