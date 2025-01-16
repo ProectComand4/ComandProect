@@ -90,9 +90,6 @@ public class ProductRepository {
     }
 
 
-
-    public Product findById(int index) {
-
     /**
      * Находит продукт по id
      * @param id id заказа

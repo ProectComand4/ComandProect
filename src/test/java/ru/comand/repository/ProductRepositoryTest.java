@@ -16,16 +16,23 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductRepositoryTest {
-    private final Path filePath =
-            Path.of("src/test/java/ru/comand/repository/Files/order.txt");
+    private final String filePath =
+            "src/test/java/ru/comand/repository/Files/product.txt";
+    private final String fileIdPath =
+            "src/test/java/ru/comand/repository/Files/productId.txt";
     private final Product testProduct =
-            new Product(1, "test", 112, CategoryProduct.FOOD);
+            new Product( "test", 112, CategoryProduct.FOOD);
     private final Integer id = 1;
 
     @BeforeEach
     void setUp() {
         try {
-            Files.createFile(filePath);
+            Files.createFile(Path.of(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Files.createFile(Path.of(fileIdPath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -35,7 +42,12 @@ class ProductRepositoryTest {
     @AfterEach
     void tearDown() {
         try {
-            Files.delete(filePath);
+            Files.delete(Path.of(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Files.delete(Path.of(fileIdPath));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,30 +55,30 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void save() {
-        try {
-            Files.write(filePath, testProduct.toStringForFiles().getBytes(), StandardOpenOption.APPEND);
-            Product result = Files.readAllLines(filePath).stream().map(Product::new).findFirst().get();
-            assertArrayEquals(result.toString().getBytes(), testProduct.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    void save_Product_Test() {
+        //give
+        ProductRepository productRepository = new ProductRepository(filePath, fileIdPath);
+        //when
+        productRepository.save(testProduct);
+        //then
+        assertNotNull(productRepository.findById(id));
+        assertEquals(testProduct, productRepository.findById(id));
+        assertEquals(1, productRepository.findAll().size());
 
+    }
 
     @Test
-    void findById() {
-
-        try {
-            Files.write(filePath, testProduct.toStringForFiles().getBytes(), StandardOpenOption.APPEND);
-            Product result = Files.readAllLines(filePath).stream().map(Product::new).findFirst().get();
-            assertEquals(id, result.getId());
-
-            //  assertArrayEquals(result.toString().getBytes(), testProduct.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    void findAll_Product_Test() {
+        //give
+        ProductRepository productRepository = new ProductRepository(filePath, fileIdPath);
+        //when
+        productRepository.save(testProduct);
+        List<Product> products = productRepository.findAll();
+        //then
+        assertNotNull(products);
+        assertEquals(testProduct, products.get(0));
 
     }
+
+
 }
