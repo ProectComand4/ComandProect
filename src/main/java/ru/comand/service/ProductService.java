@@ -22,7 +22,7 @@ public class ProductService {
      * @return сохранённого продукта
      */
     public String addProduct(String name, Integer price, CategoryProduct category) {
-        Product newProduct = new Product(null, name, price, category);
+        Product newProduct = new Product( name, price, category);
         productRepository.save(newProduct);
         return newProduct.toString();
     }

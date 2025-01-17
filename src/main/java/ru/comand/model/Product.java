@@ -10,10 +10,10 @@ public class Product {
     private String productName;
     private Integer productPrice;
 
-    public Product(Integer id, String productName,
+    public Product( String productName,
                    Integer productPrice,
                    CategoryProduct categoryProduct) {
-        this.id = id;
+        this.id = null;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productCategory = categoryProduct;
