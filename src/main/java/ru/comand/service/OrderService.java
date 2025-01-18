@@ -57,8 +57,11 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
+    /**
+     * Добавляет заказ с новым статусом в репозиторий
+     * @param orders список заказов
+     */
     public void saveFromFile(List<Order> orders) {
-
         orderRepository.changeStatus(orders);
     }
 

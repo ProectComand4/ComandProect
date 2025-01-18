@@ -98,7 +98,7 @@ public class OrderRepository {
 
     /**
      * Изменяет статус Заказа
-     * @param orderList
+     * @param orderList список заказов
      */
     public void changeStatus(List<Order> orderList) {
         try {

@@ -53,7 +53,7 @@ public class OrderController {
                     case 2 -> getAll();
                     case 3 -> {
                         getAll();
-                        System.out.println("Введите Id заказа ");
+                        System.out.println("Введите Id заказа: ");
                         int id = scan.nextInt();
                         System.out.println(getById(id).toString());
                     }
@@ -79,8 +79,13 @@ public class OrderController {
                             case 4 -> oS = OrderStatus.CANCELLED;
                             default -> logger.warn("Введите цифру из представленных");
                         }
-                        System.out.println("Статус заказа успешно изменён - ");
-                        changeOrderStatus(getById(id), oS);
+                        if (oS == null) {
+                            System.out.println("Не удалось изменить статус заказа - ");
+                            changeOrderStatus(getById(id), OrderStatus.NEW);
+                        } else {
+                            System.out.println("Статус заказа успешно изменён - ");
+                            changeOrderStatus(getById(id), oS);
+                        }
                     }
                     default -> System.out.println("Ошибка повторите");
                 }
@@ -189,6 +194,11 @@ public class OrderController {
         return orderService.getById(id);
     }
 
+    /**
+     * Меняет статус заказа
+     * @param order заказ
+     * @param status статус заказа
+     */
     public void changeOrderStatus(Order order, OrderStatus status) {
         List<Order> list = orderService.getAll();
         Order orders = list.stream()
