@@ -41,11 +41,11 @@ public class CustomerController {
                         return;
                     }
                     case 1 -> add();
-                    case 2 -> getAll();
+                    case 2 -> System.out.println(getAll());
                     case 3 -> {
                         System.out.print("Введите ID покупателя: ");
                         int id = scanner.nextInt();
-                        getById(id);
+                        System.out.println(getById(id));
                     }
                     default -> {
                         logger.warn("Неподходящее число");
@@ -68,7 +68,7 @@ public class CustomerController {
     /**
      * Добавляет нового покупателя
      */
-    private void add() {
+    protected void add() {
         while ((customerName = scanner.nextLine()).trim().isEmpty()) {
             System.out.println("\nВведите имя покупателя: ");
         }

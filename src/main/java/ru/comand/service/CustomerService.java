@@ -3,6 +3,7 @@ package ru.comand.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.comand.Enums.CustomerType;
+import ru.comand.Exceptions.CustomerNotFoundException;
 import ru.comand.model.Customer;
 import ru.comand.repository.CustomerRepository;
 
@@ -52,6 +53,9 @@ public class CustomerService {
      * @return покупатель с указанным ID
      */
     public Customer getByID(int id) {
+        if (customerRepository.findById(id) == null) {
+            throw new CustomerNotFoundException(id);
+        }
         return customerRepository.findById(id);
     }
 }
